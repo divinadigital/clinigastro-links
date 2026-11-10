@@ -20,7 +20,17 @@
   .pagina { position: relative; width: 100%; max-width: 480px; min-height: 100vh; min-height: 100dvh; background: linear-gradient(180deg, #0E3A70, #134F90 55%, #15529A); display: flex; flex-direction: column; padding: 28px 18px 0; overflow: hidden; }
   .pagina::before { content: ""; position: absolute; inset: 0 0 45% 0; background: linear-gradient(180deg, rgba(10,37,71,.55), rgba(10,37,71,0)); pointer-events: none; }
   /* Maneco no pé da página; o topo da imagem se dissolve no degradê para não marcar emenda */
-  .pagina::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; aspect-ratio: 2 / 3; background: url(fundo.webp) center bottom / 100% auto no-repeat; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 32%); mask-image: linear-gradient(180deg, transparent 0, #000 32%); pointer-events: none; }
+  /* cena do pé: luz verde e bolinhas animadas atrás do Maneco recortado */
+  .cena { position: absolute; left: 0; right: 0; bottom: 0; height: calc(min(100vw, 480px) * 1.15); pointer-events: none; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 30%); mask-image: linear-gradient(180deg, transparent 0, #000 30%); }
+  .luz { position: absolute; border-radius: 50%; filter: blur(30px); }
+  .luz.verde { width: 95%; aspect-ratio: 1; left: 2%; bottom: 2%; background: radial-gradient(circle, rgba(78,188,140,.75), rgba(78,188,140,.25) 45%, transparent 70%); animation: respira 9s ease-in-out infinite; }
+  .luz.azul { width: 80%; aspect-ratio: 1; left: 30%; bottom: 18%; background: radial-gradient(circle, rgba(64,190,255,.6), transparent 65%); animation: respira 12s ease-in-out -4s infinite reverse; }
+  .bolha { position: absolute; border-radius: 50%; background: radial-gradient(circle at 40% 40%, rgba(150,240,205,.85), rgba(78,188,140,.45) 55%, rgba(78,188,140,0) 72%); filter: blur(2px); opacity: 0; animation: sobe var(--t, 12s) ease-in-out var(--d, 0s) infinite; }
+  .bolha.az { background: radial-gradient(circle at 40% 40%, rgba(140,215,255,.8), rgba(60,150,230,.4) 55%, rgba(60,150,230,0) 72%); }
+  .bolha.foco { filter: blur(6px); }
+  .maneco { position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; }
+  @keyframes respira { 0%,100% { transform: translate(0,0) scale(1); opacity: .85; } 50% { transform: translate(6%, -4%) scale(1.12); opacity: 1; } }
+  @keyframes sobe { 0% { transform: translate(0, 30px) scale(.8); opacity: 0; } 20% { opacity: var(--o, .8); } 50% { transform: translate(var(--x, 12px), -40px) scale(1); } 80% { opacity: var(--o, .8); } 100% { transform: translate(0, -110px) scale(.9); opacity: 0; } }
   header, main, footer { position: relative; z-index: 1; }
   header { text-align: center; color: #fff; }
   .logo { width: 230px; max-width: 70%; height: auto; display: block; margin: 0 auto 10px; }
@@ -44,11 +54,28 @@
   .respiro { flex: 1; min-height: calc(min(100vw, 480px) * .62); }
   footer { margin: 0 -18px; padding: 14px 18px 18px; background: linear-gradient(180deg, rgba(10,37,71,0), rgba(10,37,71,.85) 45%); color: #fff; text-align: center; font-size: 11px; line-height: 1.5; }
   footer b { font-weight: 700; }
-  @media (prefers-reduced-motion: reduce) { .bt { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .bt { transition: none; } .luz, .bolha { animation: none; } .bolha { opacity: .6; } }
 </style>
 </head>
 <body>
 <div class="pagina">
+  <div class="cena" aria-hidden="true">
+    <span class="luz azul"></span>
+    <span class="luz verde"></span>
+    <span class="bolha " style="left:6%;bottom:48%;width:46px;height:46px;--t:13s;--d:-2s;--x:14px;--o:0.8"></span>
+    <span class="bolha az" style="left:14%;bottom:22%;width:26px;height:26px;--t:10s;--d:-6s;--x:-10px;--o:0.7"></span>
+    <span class="bolha " style="left:22%;bottom:62%;width:18px;height:18px;--t:15s;--d:-9s;--x:8px;--o:0.6"></span>
+    <span class="bolha foco" style="left:78%;bottom:52%;width:54px;height:54px;--t:14s;--d:-4s;--x:-16px;--o:0.75"></span>
+    <span class="bolha " style="left:88%;bottom:30%;width:30px;height:30px;--t:11s;--d:-1s;--x:10px;--o:0.8"></span>
+    <span class="bolha az" style="left:70%;bottom:70%;width:22px;height:22px;--t:16s;--d:-11s;--x:-8px;--o:0.6"></span>
+    <span class="bolha foco az" style="left:40%;bottom:74%;width:34px;height:34px;--t:17s;--d:-13s;--x:12px;--o:0.55"></span>
+    <span class="bolha " style="left:58%;bottom:40%;width:16px;height:16px;--t:9s;--d:-3s;--x:6px;--o:0.7"></span>
+    <span class="bolha foco" style="left:3%;bottom:12%;width:38px;height:38px;--t:12s;--d:-8s;--x:10px;--o:0.6"></span>
+    <span class="bolha az" style="left:92%;bottom:64%;width:20px;height:20px;--t:13s;--d:-7s;--x:-6px;--o:0.7"></span>
+    <span class="bolha " style="left:30%;bottom:38%;width:14px;height:14px;--t:10s;--d:-5s;--x:-8px;--o:0.6"></span>
+    <span class="bolha foco" style="left:84%;bottom:12%;width:40px;height:40px;--t:15s;--d:-10s;--x:-12px;--o:0.65"></span>
+    <img class="maneco" src="maneco.webp" alt="" width="1024" height="699">
+  </div>
   <header>
     <img class="logo" src="logo.png" alt="Clinigastro 40 anos · Vem. A gente cuida." width="230" height="73">
     <p>Consultas, exames e cirurgias em um só lugar</p>
